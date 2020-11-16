@@ -1,0 +1,159 @@
+<div ng-controller="HomeController as vm" ng-init="vm.init()" class="parent">
+    <!--class="container"-->
+
+    <h1>To Do List</h1>
+
+    <button class="btn" style="margin-top: 15px;" ng-click="vm.show = !vm.show" ng-if="!vm.show">
+        <i class="fa fa-list" aria-hidden="true"></i>
+        Inserir nova tarefa
+    </button>
+
+    <div class="form-box animationIf" ng-if="vm.show">
+        <form ng-submit="vm.formData()">
+            <div class="form-group name-box">
+                <input type="text" class="form-control" id="nameTask" name="name" ng-model="vm.form.name" ng-required>
+                <!--placeholder="Insira a tarefa aqui"-->
+                <label>Nome da tarefa:</label>
+                <!--for="nameTask"-->
+            </div>
+
+            <button type="submit" class="btn">Inserir</button>
+            <!--btn-outline-success-->
+            <button type="submit" class="btn" ng-click="vm.show = !vm.show">Cancelar</button>
+        </form>
+    </div>
+
+   <div class="wrapper">
+        <div class="container">
+            <h4>To Do</h4>
+        </div>
+        <div class="container">
+            <h4>Doing</h4>
+        </div>
+        <div class="container">
+            <h4>Done</h4>
+        </div>
+        <div class="container">
+            <h4>Block</h4>
+        </div>
+    </div>
+
+    <div class="wrapper">
+        <div class="container ng-isolate-scope" dragula='"second-bag"' id="todoID" dragula-model='todoDragulaModel'>
+            <div id="{{data.id}}" ng-repeat="data in todoDragulaModel">
+                <li class="column__item">
+                    <ul class="card__list">
+                        <li class="card__item">
+                            <span class="card__tag card__tag--todo">{{data.status | lowercase}}</span>
+                            <h4 class="card__title">{{data.name}}</h4>
+                            <ol class="card__actions">
+                                <li class="card__actions--wrapper">
+                                    <i class="fa fa-calendar-check-o"></i>
+                                    <span class="card__actions--text">{{data.creationDate |  date:'mediumDate'}}</span>
+                                </li>
+                                <ol class="card__avatars">
+                                    <li>
+                                        <span class="card__actions--text">Usuário</span>
+                                    </li>
+                                    <li class="card__avatars--item">
+                                        <img src="../src/assets/images/user.png" alt="user image" class="avatar__image">
+                                    </li>
+                                </ol>
+                            </ol>
+                        </li>
+                    </ul>
+                </li>
+                <!--{{data.name}}
+                <br>
+                {{data.creationDate |  date:'mediumDate'}}
+                <br>
+                {{data.status}}-->
+            </div>
+        </div>
+
+        <div class="container ng-isolate-scope" dragula='"second-bag"' id="doingID" dragula-model='doingDragulaModel'>
+            <!--DOING-->
+            <div id="{{data.id}}" ng-repeat="data in doingDragulaModel">
+                <li class="column__item">
+                    <ul class="card__list">
+                        <li class="card__item">
+                            <span class="card__tag card__tag--doing">{{data.status | lowercase}}</span>
+                            <h4 class="card__title">{{data.name}}</h4>
+                            <ol class="card__actions">
+                                <li class="card__actions--wrapper">
+                                    <i class="fa fa-calendar-check-o"></i>
+                                    <span class="card__actions--text">{{data.creationDate |  date:'mediumDate'}}</span>
+                                </li>
+                                <ol class="card__avatars">
+                                    <li>
+                                        <span class="card__actions--text">Usuário</span>
+                                    </li>
+                                    <li class="card__avatars--item">
+                                        <img src="../src/assets/images/user.png" alt="user image" class="avatar__image">
+                                    </li>
+                                </ol>
+                            </ol>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+
+        <div class="container ng-isolate-scope" dragula='"second-bag"' id="doneID" dragula-model='doneDragulaModel'>
+            <!--DONE ID: {{data.id}}-->
+            <div id="{{data.id}}" ng-repeat="data in doneDragulaModel">
+                <li class="column__item">
+                    <ul class="card__list">
+                        <li class="card__item">
+                            <span class="card__tag card__tag--done">{{data.status | lowercase}}</span>
+                            <h4 class="card__title">{{data.name}}</h4>
+                            <ol class="card__actions">
+                                <li class="card__actions--wrapper">
+                                    <i class="fa fa-calendar-check-o"></i>
+                                    <span class="card__actions--text">{{data.creationDate |  date:'mediumDate'}}</span>
+                                </li>
+                                <ol class="card__avatars">
+                                    <li>
+                                        <span class="card__actions--text">Usuário</span>
+                                    </li>
+                                    <li class="card__avatars--item">
+                                        <img src="../src/assets/images/user.png" alt="user image" class="avatar__image">
+                                    </li>
+                                </ol>
+                            </ol>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+
+        <div class="container ng-isolate-scope" dragula='"second-bag"' id="blockID" dragula-model='blockDragulaModel'>
+            <!--BLOCK-->
+            <div id="{{data.id}}" ng-repeat="data in blockDragulaModel">
+                <li class="column__item">
+                    <ul class="card__list">
+                        <li class="card__item">
+                            <span class="card__tag card__tag--block">{{data.status | lowercase}}</span>
+                            <h4 class="card__title">{{data.name}}</h4>
+                            <ol class="card__actions">
+                                <li class="card__actions--wrapper">
+                                    <i class="fa fa-calendar-check-o"></i>
+                                    <span class="card__actions--text">{{data.creationDate |  date:'mediumDate'}}</span>
+                                </li>
+                                <ol class="card__avatars">
+                                    <li>
+                                        <span class="card__actions--text">Usuário</span>
+                                    </li>
+                                    <li class="card__avatars--item">
+                                        <img src="../src/assets/images/user.png" alt="user image" class="avatar__image">
+                                    </li>
+                                </ol>
+                            </ol>
+                        </li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,2 @@
+--o nome da tabela é o mesmo da classe, ou seja, com primeira letra maiúscula: Ex, User.
+INSERT INTO User (id, name, email, password, permission) VALUES ('dd58ad74bfba402ea105226f2eb598e9', 'test', 'teste@email.com', '123456', 'ADMIN');
