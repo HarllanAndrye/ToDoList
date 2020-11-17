@@ -23,6 +23,8 @@ public class TodoListDTO implements Serializable {
 	private LocalDateTime creationDate;
 	
 	private String status;
+	
+	private String user;
 
 	public Long getId() {
 		return id;
@@ -56,4 +58,12 @@ public class TodoListDTO implements Serializable {
 		this.status = status;
 	}
 
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+	
 }

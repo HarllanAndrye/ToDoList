@@ -26,9 +26,8 @@ public class TodoListParser {
 		dto.setId(entity.getId());
 		dto.setName(entity.getName());
 		dto.setCreationDate(entity.getCreationDate());
-		
-		// Obtém o último status atribuído a tarefa
-		dto.setStatus(entity.getStatus().get(entity.getStatus().size() - 1).toString());
+		dto.setStatus(entity.getStatus().get(entity.getStatus().size() - 1).toString()); // Obtém o último status atribuído a tarefa		
+		dto.setUser(entity.getStatus().get(entity.getStatus().size() - 1).getUser().getName());
 		
 		return dto;
 	}

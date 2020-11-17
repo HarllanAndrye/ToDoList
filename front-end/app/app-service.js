@@ -4,7 +4,7 @@
     angular.module('todolist')
         .service('TodoListService', todoListService);
 
-        todoListService.$inject = ['$http', '$base64'];
+    todoListService.$inject = ['$http', '$base64'];
 
     function todoListService($http, Base64) {
         var URL_BASE = 'http://localhost:8080/restapi/todolist';
