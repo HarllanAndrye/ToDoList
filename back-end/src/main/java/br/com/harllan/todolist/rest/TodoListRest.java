@@ -22,10 +22,14 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import br.com.harllan.todolist.dto.TodoListDTO;
 import br.com.harllan.todolist.dto.TodoListStatusDTO;
+import br.com.harllan.todolist.dto.request.TodoListPostDTO;
+import br.com.harllan.todolist.dto.request.TodoListPutDTO;
 import br.com.harllan.todolist.service.TodoListService;
 import br.com.harllan.todolist.service.TodoListStatusService;
 
@@ -33,6 +37,7 @@ import br.com.harllan.todolist.service.TodoListStatusService;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RolesAllowed({"ADMIN", "USER"})
+@Tag(name = "To Do List")
 public class TodoListRest {
 	
 	@Inject
@@ -102,11 +107,17 @@ public class TodoListRest {
 	@APIResponse(responseCode = "201",
 		description = "inserir tarefa",
 		content = {
-			@Content(mediaType =  "application/json",
-			schema = @Schema(implementation = TodoListDTO.class, type = SchemaType.ARRAY))
-			}
+			@Content(
+				mediaType =  "application/json",
+				schema = @Schema(implementation = TodoListDTO.class)
+			)
+		}
 	)
-	public Response insertTodoList(TodoListDTO dto, @Context SecurityContext securityContext) {
+	@APIResponse(responseCode = "400", description = "Caso os dados passados sejam inválidos.")
+	public Response insertTodoList(
+			@RequestBody(description = "Inserir uma tarefa", required = true,
+            content = @Content(schema = @Schema(implementation = TodoListPostDTO.class))) TodoListDTO dto, 
+			@Context SecurityContext securityContext) {
 		List<String> errors = service.validateDto(dto); // Validando os dados do dto
 		
 		if (!errors.isEmpty()) {
@@ -128,14 +139,13 @@ public class TodoListRest {
 	@Path("update/{id}")
 	@Operation(summary = "Atualizar uma tarefa",
 		description = "Atualizar tarefa com base no ID.")
-	@APIResponse(responseCode = "201",
-		description = "atualizar tarefa",
-		content = {
-			@Content(mediaType =  "application/json",
-			schema = @Schema(implementation = TodoListDTO.class))
-			}
-	)
-	public Response updateTodoList(@PathParam("id") Long id, TodoListDTO dto,  @Context SecurityContext securityContext) {
+	@APIResponse(responseCode = "201", description = "atualizar tarefa")
+	@APIResponse(responseCode = "400", description = "Caso os dados passados sejam inválidos.")
+	public Response updateTodoList(
+			@PathParam("id") Long id, 
+			@RequestBody(description = "Alterar uma tarefa", required = true,
+            content = @Content(schema = @Schema(implementation = TodoListPutDTO.class))) TodoListDTO dto,  
+			@Context SecurityContext securityContext) {
 		List<String> errors = service.validateDto(dto);
 		
 		if (!errors.isEmpty()) {
@@ -163,6 +173,7 @@ public class TodoListRest {
 			schema = @Schema(implementation = TodoListDTO.class))
 			}
 	)
+	@APIResponse(responseCode = "500", description = "Caso ocorra um erro no servidor")
 	public Response deleteTodoList(@PathParam("id") Long id) {
 		if (service.deleteTodoList(id)) {
 			return Response

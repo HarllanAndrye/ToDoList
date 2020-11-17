@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.hibernate.validator.constraints.Length;
 
 @SuppressWarnings("serial")
@@ -24,6 +25,7 @@ public class TodoListDTO implements Serializable {
 	
 	private String status;
 	
+	@Schema(description = "Nome do usuário que inseriu a tarefa.")
 	private String user;
 
 	public Long getId() {
