@@ -2,21 +2,30 @@
     "use strict";
 
     angular.module('todolist')
-        .config(routes);
+        .config(routes)
+        .run(configDefaults);
 
     routes.$inject = ['$routeProvider'];
+    configDefaults.$inject = ['$rootScope'];
 
     function routes($routeProvider) {
         $routeProvider
             .when('/', {
-                redirectTo: '/home'
+                redirectTo: '/login'
             })
             .when('/home', {
                 templateUrl: 'pages/home.tpl.html',
             })
+            .when('/login', {
+                templateUrl: 'pages/login.tpl.html',
+            })
             .otherwise({
-                redirectTo: '/home'
+                redirectTo: '/login'
             });
+    }
+
+    function configDefaults($rootScope) {
+        $rootScope.listaMensagens = [];
     }
 
 })();

@@ -24,6 +24,7 @@ describe('TodoListService', function () {
         }));
 
         beforeEach(function () {
+            $httpBackend.whenGET('pages/login.tpl.html').respond(200, {});
             $httpBackend.whenGET('pages/home.tpl.html').respond(200, {});
         });
 
@@ -147,6 +148,32 @@ describe('TodoListService', function () {
                     .respond(400, {});
                 // Método testado
                 service.deleteTodoList(id, 0);
+                $httpBackend.flush();
+            });
+        });
+
+        describe(': requisição para authorization()', function () {
+            var urlReq = 'http://localhost:8080/restapi/user/login';
+            var method = 'POST';
+
+            it('deve dar sucesso', function () {
+                // Init
+                $httpBackend.when(method, urlReq)
+                    .respond(200, respSuccess);
+                // Método testado
+                service.authorization()
+                    .then(function (response) {
+                        expect(response.status).toEqual(200);
+                    });
+                $httpBackend.flush();
+            });
+
+            it('deve dar erro', function () {
+                // Init
+                $httpBackend.when(method, urlReq)
+                    .respond(400, {});
+                // Método testado
+                service.authorization('', 0);
                 $httpBackend.flush();
             });
         });

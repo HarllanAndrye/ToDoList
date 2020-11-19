@@ -4,25 +4,40 @@
     angular.module('todolist')
         .service('TodoListService', todoListService);
 
-    todoListService.$inject = ['$http', '$base64'];
+    todoListService.$inject = ['$http', '$base64', '$window'];
 
-    function todoListService($http, Base64) {
+    function todoListService($http, Base64, $window) {
         var URL_BASE = 'http://localhost:8080/restapi/todolist';
 
-        // Para a autenticação do back-end
-        var username = "teste@email.com";
-        var password = "123456"
-        var auth = Base64.encode(username + ':' + password);
-        $http.defaults.headers.common['Authorization'] = 'Basic ' + auth;
-
         return {
+            authorization: authorization,
             getTodoList: getTodoList,
             insertTodoList: insertTodoList,
             updateTodoList: updateTodoList,
             deleteTodoList: deleteTodoList
         }
 
+        function authorization(params) {
+            /*var username = params.username;
+            var password = params.password;
+            var auth = Base64.encode(username + ':' + password);
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + auth;*/
+
+            var URL_LOGIN = 'http://localhost:8080/restapi/user/login';
+
+            return $http.post(URL_LOGIN, params)
+                .then(function (response) {
+                    return response;
+                })
+                .catch(function (error) {
+                    return error;
+                });
+        }
+
         function getTodoList() {
+            var token = $window.localStorage.getItem('token');
+            $http.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+
             return $http.get(URL_BASE)
                 .then(function (response) {
                     return response.data;

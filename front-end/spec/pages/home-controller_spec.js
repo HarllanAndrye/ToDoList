@@ -1,6 +1,6 @@
 describe('HomeController', function () {
 
-    var $controller, $rootScope, $httpBackend, service, $compile;
+    var $controller, $rootScope, $httpBackend, service, $compile, $window;
 
     beforeEach(function () {
         angular.mock.todolistMock();
@@ -12,6 +12,7 @@ describe('HomeController', function () {
         $httpBackend = $injector.get('$httpBackend');
         service = $injector.get('TodoListService');
         $compile = $injector.get('$compile');
+        $window = $injector.get('$window');
     }));
 
     afterEach(function () {
@@ -22,6 +23,7 @@ describe('HomeController', function () {
     });
 
     beforeEach(function () {
+        $httpBackend.whenGET('pages/login.tpl.html').respond(200, {});
         $httpBackend.whenGET('pages/home.tpl.html').respond(200, {});
     });
 
@@ -43,16 +45,12 @@ describe('HomeController', function () {
 
         it(': deve iniciar buscando as tarefas - metodo init()', function () {
             // Init
-            var val = {
-                "creationDate": "2020-11-16T15:14:38.872263",
-                "id": 1,
-                "name": "Teste",
-                "status": "TODO",
-                "user": "test"
-            };
+            var data = {
+                status: 401
+            }
 
             // Cria uma promise mock
-            var promiseMock = new Promise(function (resolve, reject) { resolve(val); });
+            var promiseMock = new Promise(function (resolve, reject) { resolve(data); });
             // cria um 'spy'
             service.getTodoList = jasmine.createSpy('getTodoList').and.returnValue(promiseMock);
 
@@ -201,6 +199,16 @@ describe('HomeController', function () {
             jasmine.clock().tick(500);
 
             jasmine.clock().uninstall();
+        });
+
+        it(': testando o metodo logout()', function () {
+            // Init
+            $window.localStorage.setItem('token', '1234567890');
+
+            // Método testado
+            vm.logout();
+
+            expect($window.localStorage.getItem('token')).toEqual('');
         });
 
     });

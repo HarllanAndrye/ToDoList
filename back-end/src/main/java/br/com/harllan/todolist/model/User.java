@@ -14,13 +14,12 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.PasswordType;
 import io.quarkus.security.jpa.Roles;
-import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
 
 
+//@UserDefinition // Utilizado para autenticação básica
 @Entity
 @Table(name = "user")
-@UserDefinition
 public class User extends PanacheEntityBase {
 	
 	@Id

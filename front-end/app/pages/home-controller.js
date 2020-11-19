@@ -5,21 +5,21 @@
     angular.module('todolist')
         .controller('HomeController', homeController);
 
-    homeController.$inject = ['$scope', 'dragulaService', 'TodoListService'];
+    homeController.$inject = ['$scope', 'dragulaService', 'TodoListService', 'helperFactory', '$window'];
 
-    function homeController($scope, dragulaService, TodoListService) {
+    function homeController($scope, dragulaService, TodoListService, helper, $window) {
         var vm = this;
 
         vm.show = false;
         vm.init = init;
         vm.taskData = taskData;
         vm.formData = formData;
+        vm.logout = logout;
 
         $scope.todoDragulaModel = [];
         $scope.doingDragulaModel = [];
         $scope.doneDragulaModel = [];
         $scope.blockDragulaModel = [];
-
 
         dragulaService.options($scope, 'second-bag', {
             accepts: function (el, target, source,) {
@@ -40,15 +40,19 @@
                 .then(tasks);
 
             function tasks(_tasks) {
-                var todoList = _tasks.filter(o => o.status == 'TODO');
-                var doingList = _tasks.filter(o => o.status == 'DOING');
-                var doneList = _tasks.filter(o => o.status == 'DONE');
-                var blockList = _tasks.filter(o => o.status == 'BLOCK');
+                if (_tasks.status == 401) {
+                    helper.path('/login');
+                } else {
+                    var todoList = _tasks.filter(o => o.status == 'TODO');
+                    var doingList = _tasks.filter(o => o.status == 'DOING');
+                    var doneList = _tasks.filter(o => o.status == 'DONE');
+                    var blockList = _tasks.filter(o => o.status == 'BLOCK');
 
-                $scope.todoDragulaModel = todoList;
-                $scope.doingDragulaModel = doingList;
-                $scope.doneDragulaModel = doneList;
-                $scope.blockDragulaModel = blockList;
+                    $scope.todoDragulaModel = todoList;
+                    $scope.doingDragulaModel = doingList;
+                    $scope.doneDragulaModel = doneList;
+                    $scope.blockDragulaModel = blockList;
+                }
             }
         }
 
@@ -124,8 +128,15 @@
                     } else if (status == 'BLOCK') {
                         $scope.blockDragulaModel.filter(o => o.id == params.id).map(o => o.status = status);
                     }
+                } else {
+                    helper.addMsg(_status.data.message, 'warning', '');
                 }
             }
+        }
+
+        function logout() {
+            $window.localStorage.setItem('token', '');
+            helper.path('/login');
         }
     }
 

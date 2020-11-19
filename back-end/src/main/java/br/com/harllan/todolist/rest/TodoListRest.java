@@ -20,6 +20,8 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeIn;
+import org.eclipse.microprofile.openapi.annotations.enums.SecuritySchemeType;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -33,11 +35,36 @@ import br.com.harllan.todolist.dto.request.TodoListPutDTO;
 import br.com.harllan.todolist.service.TodoListService;
 import br.com.harllan.todolist.service.TodoListStatusService;
 
+import org.eclipse.microprofile.openapi.annotations.security.SecuritySchemes;
+import org.eclipse.microprofile.openapi.annotations.security.OAuthFlow;
+import org.eclipse.microprofile.openapi.annotations.security.OAuthFlows;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
+
+
 @Path("todolist")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON) 
 @RolesAllowed({"ADMIN", "USER"})
 @Tag(name = "To Do List")
+@SecuritySchemes(value = {
+	@SecurityScheme(
+			securitySchemeName = "quarkus_oauth",
+			type = SecuritySchemeType.OAUTH2,
+			flows = @OAuthFlows(
+					password = @OAuthFlow(
+							tokenUrl = "http://localhost:8080/restapi/user/login"
+							)
+					)
+			),
+	@SecurityScheme(
+			securitySchemeName = "api_key",
+			type = SecuritySchemeType.APIKEY,
+			apiKeyName = "Authorization",
+			in = SecuritySchemeIn.HEADER
+		)
+	}
+)
 public class TodoListRest {
 	
 	@Inject
@@ -57,6 +84,7 @@ public class TodoListRest {
 			schema = @Schema(implementation = TodoListDTO.class, type = SchemaType.ARRAY))
 			}
 	)
+	@SecurityRequirement(name = "api_key")
 	public Response getTodoList() {
 		return Response
 				.status(Status.OK)
@@ -75,6 +103,7 @@ public class TodoListRest {
 			schema = @Schema(implementation = TodoListDTO.class, type = SchemaType.ARRAY))
 			}
 	)
+	@SecurityRequirement(name = "api_key")
 	public Response getTodoListById(@PathParam("id") Long id) {
 		return Response
 				.status(Status.OK)
@@ -93,6 +122,7 @@ public class TodoListRest {
 			schema = @Schema(implementation = TodoListStatusDTO.class, type = SchemaType.ARRAY))
 			}
 	)
+	@SecurityRequirement(name = "api_key")
 	public Response getStatusByTaskId(@PathParam("id") Long id) {
 		return Response
 				.status(Status.OK)
@@ -114,6 +144,7 @@ public class TodoListRest {
 		}
 	)
 	@APIResponse(responseCode = "400", description = "Caso os dados passados sejam inválidos.")
+	@SecurityRequirement(name = "api_key")
 	public Response insertTodoList(
 			@RequestBody(description = "Inserir uma tarefa", required = true,
             content = @Content(schema = @Schema(implementation = TodoListPostDTO.class))) TodoListDTO dto, 
@@ -141,6 +172,7 @@ public class TodoListRest {
 		description = "Atualizar tarefa com base no ID.")
 	@APIResponse(responseCode = "201", description = "atualizar tarefa")
 	@APIResponse(responseCode = "400", description = "Caso os dados passados sejam inválidos.")
+	@SecurityRequirement(name = "api_key")
 	public Response updateTodoList(
 			@PathParam("id") Long id, 
 			@RequestBody(description = "Alterar uma tarefa", required = true,
@@ -151,11 +183,23 @@ public class TodoListRest {
 		if (!errors.isEmpty()) {
 			return Response
 					.status(Status.BAD_REQUEST)
-					.entity(errors.get(0))
+					.entity("{\"error\": \"" + errors.get(0) + "\"}")
 					.build();
 		}
 		
-		service.updateTodoList(id, dto, securityContext.getUserPrincipal().getName());
+		String returnError = service.updateTodoList(id, dto, securityContext.getUserPrincipal().getName());
+		
+		if (!returnError.isEmpty()) {
+			String msg = "{"
+					+ "\"error\": \"true\","
+					+ "\"message\": \"" + returnError + "\""
+							+ "}";
+			
+			return Response
+					.status(Status.BAD_REQUEST)
+					.entity(msg)
+					.build();
+		}
 		
 		return Response
 				.status(Status.CREATED)
@@ -164,6 +208,7 @@ public class TodoListRest {
 	
 	@DELETE
 	@Path("/delete/{id}")
+	@RolesAllowed("ADMIN")
 	@Operation(summary = "Excluir uma tarefa",
 		description = "Exclui uma tarefa com base no ID.")
 	@APIResponse(responseCode = "204",
@@ -174,6 +219,7 @@ public class TodoListRest {
 			}
 	)
 	@APIResponse(responseCode = "500", description = "Caso ocorra um erro no servidor")
+	@SecurityRequirement(name = "api_key")
 	public Response deleteTodoList(@PathParam("id") Long id) {
 		if (service.deleteTodoList(id)) {
 			return Response

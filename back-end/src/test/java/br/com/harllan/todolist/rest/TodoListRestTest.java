@@ -3,13 +3,21 @@ package br.com.harllan.todolist.rest;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import br.com.harllan.todolist.token.Role;
+import br.com.harllan.todolist.token.TokenUtils;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 
@@ -18,13 +26,36 @@ import static org.hamcrest.CoreMatchers.containsString;
 @TestMethodOrder(OrderAnnotation.class)
 public class TodoListRestTest {
 
+	private static String bearerToken;
+	
+	@BeforeAll
+	public static void generateToken() {
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(Role.ADMIN);
+		
+		try {
+			bearerToken = TokenUtils.generateToken("teste@email.com", roles, Long.valueOf(3600), "https://harllan.com/issuer");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Order(1)
 	@Test
 	public void getTodoListEmptyTest() {
-		given()
-			.auth()
+		/*
+		 * .auth()
 			.preemptive()
 			.basic("teste@email.com", "123456")
+		 * */
+		given()
+			.headers(
+	              "Authorization",
+	              "Bearer " + bearerToken,
+	              "Content-Type",
+	              ContentType.JSON,
+	              "Accept",
+	              ContentType.JSON)
 			.when()
 			.get("/restapi/todolist")
 			.then()
@@ -42,9 +73,13 @@ public class TodoListRestTest {
 				+ "}";
 		
 		given()
-			.auth()
-			.preemptive()
-			.basic("teste@email.com", "123456")
+			.headers(
+	              "Authorization",
+	              "Bearer " + bearerToken,
+	              "Content-Type",
+	              ContentType.JSON,
+	              "Accept",
+	              ContentType.JSON)
 			.contentType(ContentType.JSON)
 			.body(data)
 			.when()
@@ -59,9 +94,13 @@ public class TodoListRestTest {
 	@Test
 	public void getTodoListTest() {
 		given()
-			.auth()
-			.preemptive()
-			.basic("teste@email.com", "123456")
+			.headers(
+	              "Authorization",
+	              "Bearer " + bearerToken,
+	              "Content-Type",
+	              ContentType.JSON,
+	              "Accept",
+	              ContentType.JSON)
 			.when()
 			.get("/restapi/todolist")
 			.then()
@@ -74,9 +113,13 @@ public class TodoListRestTest {
 	@Test
 	public void getTodoListByIdTest() {
 		given()
-			.auth()
-			.preemptive()
-			.basic("teste@email.com", "123456")
+			.headers(
+	              "Authorization",
+	              "Bearer " + bearerToken,
+	              "Content-Type",
+	              ContentType.JSON,
+	              "Accept",
+	              ContentType.JSON)
 			.when()
 			.get("/restapi/todolist/1")
 			.then()
@@ -89,9 +132,13 @@ public class TodoListRestTest {
 	@Test
 	public void getStatusByTaskIdTest() {
 		given()
-		.auth()
-		.preemptive()
-		.basic("teste@email.com", "123456")
+		.headers(
+	              "Authorization",
+	              "Bearer " + bearerToken,
+	              "Content-Type",
+	              ContentType.JSON,
+	              "Accept",
+	              ContentType.JSON)
 		.when()
 		.get("/restapi/todolist/status/1")
 		.then()
@@ -109,9 +156,13 @@ public class TodoListRestTest {
 				"}";
 		
 		given()
-			.auth()
-			.preemptive()
-			.basic("teste@email.com", "123456")
+			.headers(
+	              "Authorization",
+	              "Bearer " + bearerToken,
+	              "Content-Type",
+	              ContentType.JSON,
+	              "Accept",
+	              ContentType.JSON)
 			.contentType(ContentType.JSON)
 			.body(data)
 			.when()
@@ -124,9 +175,13 @@ public class TodoListRestTest {
 	@Test
 	public void deleteTodoListTest() {
 		given()
-			.auth()
-			.preemptive()
-			.basic("teste@email.com", "123456")
+			.headers(
+	              "Authorization",
+	              "Bearer " + bearerToken,
+	              "Content-Type",
+	              ContentType.JSON,
+	              "Accept",
+	              ContentType.JSON)
 			.when()
 			.delete("/restapi/todolist/delete/1")
 			.then()

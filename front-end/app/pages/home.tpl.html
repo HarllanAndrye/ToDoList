@@ -1,6 +1,11 @@
 <div ng-controller="HomeController as vm" ng-init="vm.init()" class="parent">
     <!--class="container"-->
 
+    <button class="btn" style="float: right;" ng-click="vm.logout()"><!--style="margin-top: 15px;"-->
+        <i class="fa fa-sign-out" aria-hidden="true"></i>
+        Sair
+    </button>
+
     <h1>To Do List</h1>
 
     <button class="btn" style="margin-top: 15px;" ng-click="vm.show = !vm.show" ng-if="!vm.show">
@@ -56,7 +61,7 @@
                                         <span class="card__actions--text">{{data.user}}</span>
                                     </li>
                                     <li class="card__avatars--item">
-                                        <img src="../src/assets/images/user.png" alt="user image" class="avatar__image">
+                                        <img src="../assets/images/user.png" alt="user image" class="avatar__image">
                                     </li>
                                 </ol>
                             </ol>
@@ -89,7 +94,7 @@
                                         <span class="card__actions--text">{{data.user}}</span>
                                     </li>
                                     <li class="card__avatars--item">
-                                        <img src="../src/assets/images/user.png" alt="user image" class="avatar__image">
+                                        <img src="../assets/images/user.png" alt="user image" class="avatar__image">
                                     </li>
                                 </ol>
                             </ol>
@@ -117,7 +122,7 @@
                                         <span class="card__actions--text">{{data.user}}</span>
                                     </li>
                                     <li class="card__avatars--item">
-                                        <img src="../src/assets/images/user.png" alt="user image" class="avatar__image">
+                                        <img src="../assets/images/user.png" alt="user image" class="avatar__image">
                                     </li>
                                 </ol>
                             </ol>
@@ -145,7 +150,7 @@
                                         <span class="card__actions--text">{{data.user}}</span>
                                     </li>
                                     <li class="card__avatars--item">
-                                        <img src="../src/assets/images/user.png" alt="user image" class="avatar__image">
+                                        <img src="../assets/images/user.png" alt="user image" class="avatar__image">
                                     </li>
                                 </ol>
                             </ol>

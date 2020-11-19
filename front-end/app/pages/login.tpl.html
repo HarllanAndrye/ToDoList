@@ -1,0 +1,22 @@
+<div ng-controller="LoginController as vm" ng-init="vm.init()">
+    <div class="form-box login-box">
+        <h2>Login</h2>
+        <form name="loginForm">
+            <div class="name-box">
+                <input type="email" name="email" ng-model="vm.login.username" ng-required>
+                <label>E-mail</label>
+            </div>
+            <div class="name-box">
+                <input type="password" name="password" ng-model="vm.login.password" ng-required>
+                <label>Senha</label>
+            </div>
+            <a href ng-click="vm.go('home')" ng-class="loginForm.$invalid ? 'disabledLink' : ''">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                Entrar
+            </a>
+        </form>
+    </div>
+</div>

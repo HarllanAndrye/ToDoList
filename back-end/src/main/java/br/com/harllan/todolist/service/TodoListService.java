@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
 import br.com.harllan.todolist.dao.TodoListDAO;
@@ -56,10 +55,14 @@ public class TodoListService {
 	}
 
 	@Transactional(rollbackOn = Exception.class)
-	public void updateTodoList(Long id, TodoListDTO dto, String emailUserLogado) {
+	//public void updateTodoList(Long id, TodoListDTO dto, String emailUserLogado) {
+	public String updateTodoList(Long id, TodoListDTO dto, String emailUserLogado) {
+		String returnError = "";
+		
 		// Validando o status
 		if ( StatusEnum.isInvalid(dto.getStatus().toString()) ) {
-			throw new BadRequestException("Status inválido!");
+			//throw new BadRequestException("Status inválido!");
+			return "Status inválido!";
 		}
 		
 		TodoList todo = TodoListParser.get().returnEntity(dto);
@@ -70,6 +73,8 @@ public class TodoListService {
 		dao.updateTodoList(todoDB); // Inserindo a alteração no BD
 		
 		statusService.updateStatus(id, dto.getStatus(), emailUserLogado); // Atualizando o status
+		
+		return returnError;
 	}
 	
 	private TodoList findById(Long id) {
