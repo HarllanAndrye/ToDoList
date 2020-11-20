@@ -137,7 +137,7 @@ describe('TodoListService', function () {
                 // Método testado
                 service.deleteTodoList(id)
                     .then(function (response) {
-                        expect(response.status).toEqual('OK');
+                        expect(response.status).toEqual(200);
                     });
                 $httpBackend.flush();
             });

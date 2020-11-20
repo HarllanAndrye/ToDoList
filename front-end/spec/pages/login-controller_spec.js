@@ -86,39 +86,62 @@ describe('LoginController', function () {
             service.authorization = jasmine.createSpy('authorization').and.returnValue(p);
 
             // Método testado
-            vm.go('/home');
-            
-            expect($window.localStorage.getItem('token')).toEqual('1234567890');
+            return vm.go('/home')
+                .then(function () {
+                    expect($window.localStorage.getItem('token')).toEqual('1234567890');
+                });
         });
 
-        /*it(': deve inserir a tarefa - metodo formData()', function () {
+        it(': testando o metodo go() com retorno 400', function () {
             // Init
-            vm.form = {
-                name: "Tarefa"
+            vm.login = {
+                username: 'test',
+                passowrd: 'test'
             };
-            
-            // lista mock
+
             var val = {
-                "creationDate": "2020-11-16T15:14:38.872263",
-                "id": 1,
-                "name": "Teste",
-                "status": "TODO",
-                "user": "test"
-              };
-            
+                status: 400,
+                data: {
+                    error: 'erro qualquer'
+                }
+            };
+
             // cria uma promise mock (fake, falsa) e retorna lista mock
             var p = new Promise(function (resolve, reject) { resolve(val); });
-            
+                        
             // cria um 'spy' (espião, função mascarada que simula a função real) e retorna a promise mock
-            service.insertTodoList = jasmine.createSpy('insertTodoList').and.returnValue(p);
+            service.authorization = jasmine.createSpy('authorization').and.returnValue(p);
 
             // Método testado
-            return vm.formData()
+            return vm.go('/home')
                 .then(function () {
-                    expect(vm.form.name).toEqual("");
-                    expect(scope.todoDragulaModel.length).toBeGreaterThan(0);
+                    expect($rootScope.listaMensagens[0].text).toEqual('erro qualquer');
                 });
-        });*/
+        });
+
+        it(': testando o metodo go() com retorno 401', function () {
+            // Init
+            vm.login = {
+                username: 'test',
+                passowrd: 'test'
+            };
+
+            var val = {
+                status: 401
+            };
+
+            // cria uma promise mock (fake, falsa) e retorna lista mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+                        
+            // cria um 'spy' (espião, função mascarada que simula a função real) e retorna a promise mock
+            service.authorization = jasmine.createSpy('authorization').and.returnValue(p);
+
+            // Método testado
+            return vm.go('/home')
+                .then(function () {
+                    expect($rootScope.listaMensagens[0].tipo).toEqual('warning');
+                });
+        });
 
     });
 });

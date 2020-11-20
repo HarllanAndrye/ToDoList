@@ -102,7 +102,7 @@ describe('HomeController', function () {
             scope.todoDragulaModel.find = jasmine.createSpy('find').and.returnValue(1);
 
             // cria uma promise mock
-            var p = new Promise(function (resolve, reject) { resolve(1); });
+            var p = new Promise(function (resolve, reject) { resolve(201); });
             
             // cria um 'spy'
             service.updateTodoList = jasmine.createSpy('updateTodoList').and.returnValue(p);
@@ -130,7 +130,7 @@ describe('HomeController', function () {
             scope.doingDragulaModel.find = jasmine.createSpy('find').and.returnValue(1);
 
             // cria uma promise mock
-            var p = new Promise(function (resolve, reject) { resolve(1); });
+            var p = new Promise(function (resolve, reject) { resolve(201); });
             
             // cria um 'spy'
             service.updateTodoList = jasmine.createSpy('updateTodoList').and.returnValue(p);
@@ -158,7 +158,7 @@ describe('HomeController', function () {
             scope.doneDragulaModel.find = jasmine.createSpy('find').and.returnValue(1);
 
             // cria uma promise mock
-            var p = new Promise(function (resolve, reject) { resolve(1); });
+            var p = new Promise(function (resolve, reject) { resolve(201); });
             
             // cria um 'spy'
             service.updateTodoList = jasmine.createSpy('updateTodoList').and.returnValue(p);
@@ -186,7 +186,7 @@ describe('HomeController', function () {
             scope.blockDragulaModel.find = jasmine.createSpy('find').and.returnValue(1);
 
             // cria uma promise mock
-            var p = new Promise(function (resolve, reject) { resolve(1); });
+            var p = new Promise(function (resolve, reject) { resolve(201); });
             
             // cria um 'spy'
             service.updateTodoList = jasmine.createSpy('updateTodoList').and.returnValue(p);
@@ -201,6 +201,34 @@ describe('HomeController', function () {
             jasmine.clock().uninstall();
         });
 
+        it(': testando o metodo updateTodoList() com mensagem de erro', function () {
+            // Init
+            var params = {
+                "id": 1,
+                "name": "teste",
+                "status": "TODO"
+            };
+
+            var val = {
+                status: 400,  
+                data: {
+                    message: "Error"
+                }
+            };
+
+            // cria uma promise mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+            
+            // cria um 'spy'
+            service.updateTodoList = jasmine.createSpy('updateTodoList').and.returnValue(p);
+
+            // Método testado
+            return vm.updateTodoList(params, 'TODO')
+                .then(function () {
+                    expect($rootScope.listaMensagens[0].text).toEqual('Error');
+                });
+        });
+
         it(': testando o metodo logout()', function () {
             // Init
             $window.localStorage.setItem('token', '1234567890');
@@ -209,6 +237,132 @@ describe('HomeController', function () {
             vm.logout();
 
             expect($window.localStorage.getItem('token')).toEqual('');
+        });
+
+        it(': testando o metodo deleteTask() para a task TODO', function () {
+            // Init
+            var id = 1;
+            var status = 'TODO';
+            var val = {
+                status: 204
+            };
+
+            // Criando um spy do método filter()
+            scope.todoDragulaModel.filter = jasmine.createSpy('filter').and.returnValue('Todo OK');
+
+            // cria uma promise mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+            // cria um 'spy'
+            service.deleteTodoList = jasmine.createSpy('deleteTodoList').and.returnValue(p);
+
+            // Criando um spy para o "confirm dialog"
+            spyOn(window, 'confirm').and.returnValue(true);
+
+            // Método testado
+            return vm.deleteTask(id, status)
+                .then(function () {
+                    expect(scope.todoDragulaModel).toEqual('Todo OK');
+                });
+        });
+
+        it(': testando o metodo deleteTask() para a task DOING', function () {
+            // Init
+            var id = 1;
+            var status = 'DOING';
+            var val = {
+                status: 204
+            };
+
+            // Criando um spy do método filter()
+            scope.doingDragulaModel.filter = jasmine.createSpy('filter').and.returnValue('Doing OK');
+
+            // cria uma promise mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+            // cria um 'spy'
+            service.deleteTodoList = jasmine.createSpy('deleteTodoList').and.returnValue(p);
+
+            // Criando um spy para o "confirm dialog"
+            spyOn(window, 'confirm').and.returnValue(true);
+
+            // Método testado
+            return vm.deleteTask(id, status)
+                .then(function () {
+                    expect(scope.doingDragulaModel).toEqual('Doing OK');
+                });
+        });
+
+        it(': testando o metodo deleteTask() para a task BLOCK', function () {
+            // Init
+            var id = 1;
+            var status = 'BLOCK';
+            var val = {
+                status: 204
+            };
+
+            // Criando um spy do método filter()
+            scope.blockDragulaModel.filter = jasmine.createSpy('filter').and.returnValue('Block OK');
+
+            // cria uma promise mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+            // cria um 'spy'
+            service.deleteTodoList = jasmine.createSpy('deleteTodoList').and.returnValue(p);
+
+            // Criando um spy para o "confirm dialog"
+            spyOn(window, 'confirm').and.returnValue(true);
+
+            // Método testado
+            return vm.deleteTask(id, status)
+                .then(function () {
+                    expect(scope.blockDragulaModel).toEqual('Block OK');
+                });
+        });
+
+        it(': testando o metodo deleteTask() com erro 403', function () {
+            // Init
+            var id = 1;
+            var status = '';
+            var val = {
+                status: 403
+            };
+
+            // cria uma promise mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+            // cria um 'spy'
+            service.deleteTodoList = jasmine.createSpy('deleteTodoList').and.returnValue(p);
+
+            // Criando um spy para o "confirm dialog"
+            spyOn(window, 'confirm').and.returnValue(true);
+
+            // Método testado
+            return vm.deleteTask(id, status)
+                .then(function () {
+                    expect($rootScope.listaMensagens[0].tipo).toEqual('warning');
+                    expect($rootScope.listaMensagens[0].text).toContain('Operação não permitida!');
+                });
+        });
+
+        it(': testando o metodo deleteTask() com erro generico', function () {
+            // Init
+            var id = 1;
+            var status = '';
+            var val = {
+                status: 500
+            };
+
+            // cria uma promise mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+            // cria um 'spy'
+            service.deleteTodoList = jasmine.createSpy('deleteTodoList').and.returnValue(p);
+
+            // Criando um spy para o "confirm dialog"
+            spyOn(window, 'confirm').and.returnValue(true);
+
+            // Método testado
+            return vm.deleteTask(id, status)
+                .then(function () {
+                    expect($rootScope.listaMensagens[0].tipo).toEqual('danger');
+                    expect($rootScope.listaMensagens[0].text).toContain('Ocorreu um erro!');
+                });
         });
 
     });

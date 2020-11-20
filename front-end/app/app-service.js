@@ -76,7 +76,7 @@
         function deleteTodoList(_id) {
             return $http.delete(URL_BASE + '/delete/' + _id)
                 .then(function (response) {
-                    return response.data;
+                    return response;
                 })
                 .catch(function (error) {
                     return error;

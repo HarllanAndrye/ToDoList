@@ -14,7 +14,9 @@
         vm.init = init;
         vm.taskData = taskData;
         vm.formData = formData;
+        vm.updateTodoList = updateTodoList;
         vm.logout = logout;
+        vm.deleteTask = deleteTask;
 
         $scope.todoDragulaModel = [];
         $scope.doingDragulaModel = [];
@@ -137,6 +139,29 @@
         function logout() {
             $window.localStorage.setItem('token', '');
             helper.path('/login');
+        }
+
+        function deleteTask(id, status) {
+            var responseConfirm = $window.confirm("Deseja realmente excluir a tarefa?");
+            
+            if (responseConfirm == true) {
+                return TodoListService.deleteTodoList(id)
+                .then(function (response) {
+                    if (response.status == 204) {
+                        if (status == 'TODO') {
+                            $scope.todoDragulaModel = $scope.todoDragulaModel.filter(item => item.id != id);
+                        } else if (status == 'DOING') {
+                            $scope.doingDragulaModel = $scope.doingDragulaModel.filter(item => item.id != id);
+                        } else if (status == 'BLOCK') {
+                            $scope.blockDragulaModel = $scope.blockDragulaModel.filter(item => item.id != id);
+                        }
+                    } else if (response.status == 403) {
+                        helper.addMsg('Operação não permitida! Contate o administrador.', 'warning', '');
+                    } else {
+                        helper.addMsg('Ocorreu um erro! Tente novamente.', 'danger', '');
+                    }
+                });
+            }
         }
     }
 
