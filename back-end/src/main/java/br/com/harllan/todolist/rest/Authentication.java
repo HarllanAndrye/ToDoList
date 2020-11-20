@@ -1,5 +1,8 @@
 package br.com.harllan.todolist.rest;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +26,7 @@ import br.com.harllan.todolist.token.AuthRequest;
 import br.com.harllan.todolist.token.AuthResponse;
 import br.com.harllan.todolist.token.Role;
 import br.com.harllan.todolist.token.TokenUtils;
+import br.com.harllan.todolist.utils.PasswordEncoder;
 
 @Path("user")
 @Produces(MediaType.APPLICATION_JSON)
@@ -33,6 +37,9 @@ public class Authentication {
 	@Inject
 	UserService userService;
 	
+	@Inject
+	PasswordEncoder passEncoder;
+	
 	@ConfigProperty(name = "smallrye.jwt.expiration.grace")
 	Long duration;
 	
@@ -42,7 +49,7 @@ public class Authentication {
 	@POST
 	@PermitAll
 	@Path("login")
-	public Response login(AuthRequest authRequest) {
+	public Response login(AuthRequest authRequest) throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		List<String> errors = userService.validateRequest(authRequest);
 		
 		if (!errors.isEmpty()) {
@@ -52,9 +59,35 @@ public class Authentication {
 					.build();
 		}
 		
-		User u = userService.getUserByEmail(authRequest.username);
+		String email;
+		try {
+			email = new String(Base64.getDecoder().decode(authRequest.username));
+		} catch (IllegalArgumentException e) {
+			return Response
+					.status(Status.BAD_REQUEST)
+					.entity("{\"error\": \"Erro ao tentar decodificar username.\"}")
+					.build();
+		}
 		
-		if (u != null && u.getPassword().equals(authRequest.password)) {
+		//User u = userService.getUserByEmail(authRequest.username);
+		User u = userService.getUserByEmail(email);
+		
+		// Decodificando a senha
+		String pass;
+		try {
+			pass = new String(Base64.getDecoder().decode(authRequest.password));
+		} catch (IllegalArgumentException e) {
+			return Response
+					.status(Status.BAD_REQUEST)
+					.entity("{\"error\": \"Erro ao tentar decodificar password.\"}")
+					.build();
+		}
+		
+		// Gerando o hash para comparar com o salvo no BD
+		pass = passEncoder.encode(pass);
+		
+		//if (u != null && u.getPassword().equals(authRequest.password)) {
+		if (u != null && u.getPassword().equals(pass)) {
 			Set<Role> r = new HashSet<Role>();
 			r.add(Role.valueOf(u.getPermission()));
 			

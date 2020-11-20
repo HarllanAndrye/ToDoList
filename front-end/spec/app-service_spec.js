@@ -155,13 +155,17 @@ describe('TodoListService', function () {
         describe(': requisição para authorization()', function () {
             var urlReq = 'http://localhost:8080/restapi/user/login';
             var method = 'POST';
+            var param = {
+                username: 'teste',
+                password: 'teste'
+            };
 
             it('deve dar sucesso', function () {
                 // Init
                 $httpBackend.when(method, urlReq)
                     .respond(200, respSuccess);
                 // Método testado
-                service.authorization()
+                service.authorization(param)
                     .then(function (response) {
                         expect(response.status).toEqual(200);
                     });
@@ -173,7 +177,7 @@ describe('TodoListService', function () {
                 $httpBackend.when(method, urlReq)
                     .respond(400, {});
                 // Método testado
-                service.authorization('', 0);
+                service.authorization(param, 0);
                 $httpBackend.flush();
             });
         });

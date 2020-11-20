@@ -19,15 +19,19 @@
             deleteTodoList: deleteTodoList
         }
 
-        function authorization(params) {
-            /*var username = params.username;
-            var password = params.password;
-            var auth = Base64.encode(username + ':' + password);
+        function authorization(_params) {
+            /*var username = Base64.encode(params.username);
+            var password = Base64.encode(params.password);*/
+            var param = {
+                username: Base64.encode(_params.username),
+                password: Base64.encode(_params.password)
+            };
+            /*var auth = Base64.encode(username + ':' + password);
             $http.defaults.headers.common['Authorization'] = 'Basic ' + auth;*/
 
             var URL_LOGIN = 'http://localhost:8080/restapi/user/login';
 
-            return $http.post(URL_LOGIN, params)
+            return $http.post(URL_LOGIN, param)
                 .then(function (response) {
                     return response;
                 })
