@@ -1,0 +1,27 @@
+<div ng-controller="HistoryController as vm" ng-init="vm.init()">
+  <h1>Histórico</h1>
+
+  <h3>{{ vm.descriptionTask }}</h3>
+
+  <button class="btn" style="float: right;" ng-click="vm.goHome()"><!--margin-top: 15px;-->
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    Voltar
+</button>
+
+  <div class="container-table">
+    <ul class="responsive-table">
+      <li class="table-header">
+        <div class="col col-1">#</div>
+        <div class="col col-2">Data da modificação</div>
+        <div class="col col-3">Status</div>
+        <div class="col col-4">Usuário</div>
+      </li>
+      <li class="table-row" ng-repeat="status in vm.taskStatus | orderBy:'id'">
+        <div class="col col-1">{{status.id}}</div>
+        <div class="col col-2">{{status.creationDate | date:'mediumDate'}}</div>
+        <div class="col col-3">{{status.status | capitalize}}</div>
+        <div class="col col-4">{{status.userName}}</div>
+      </li>
+    </ul>
+  </div>
+</div>

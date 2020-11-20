@@ -188,4 +188,21 @@ public class TodoListRestTest {
 				.statusCode(204);
 	}
 	
+	@Order(8)
+	@Test
+	public void checkToken() {
+		given()
+			.headers(
+	              "Authorization",
+	              "Bearer " + bearerToken,
+	              "Content-Type",
+	              ContentType.JSON,
+	              "Accept",
+	              ContentType.JSON)
+			.when()
+			.get("/restapi/todolist/checkToken")
+			.then()
+			.statusCode(200);
+	}
+	
 }

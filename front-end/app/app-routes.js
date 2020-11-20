@@ -13,11 +13,14 @@
             .when('/', {
                 redirectTo: '/login'
             })
+            .when('/login', {
+                templateUrl: 'pages/login.tpl.html',
+            })
             .when('/home', {
                 templateUrl: 'pages/home.tpl.html',
             })
-            .when('/login', {
-                templateUrl: 'pages/login.tpl.html',
+            .when('/history/:id', {
+                templateUrl: 'pages/history.tpl.html',
             })
             .otherwise({
                 redirectTo: '/login'

@@ -47,11 +47,42 @@ describe('LoginController', function () {
             // Init
             $location.path('/login');
             $window.localStorage.setItem('token', '1234567890');
+            var val = {
+                status: 200
+            };
+
+            // cria uma promise mock (fake, falsa) e retorna lista mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+                        
+            // cria um 'spy' (espião, função mascarada que simula a função real) e retorna a promise mock
+            service.checkToken = jasmine.createSpy('checkToken').and.returnValue(p);
 
             // Método testado
-            vm.init();
-            
-            expect($location.path()).toEqual('/home');
+            return vm.init()
+                .then(function () {
+                    expect($location.path()).toEqual('/home');
+                });
+        });
+
+        it(': testando o metodo init() quando retorna erro', function () {
+            // Init
+            $location.path('/login');
+            $window.localStorage.setItem('token', '1234567890');
+            var val = {
+                status: 401
+            };
+
+            // cria uma promise mock (fake, falsa) e retorna lista mock
+            var p = new Promise(function (resolve, reject) { resolve(val); });
+                        
+            // cria um 'spy' (espião, função mascarada que simula a função real) e retorna a promise mock
+            service.checkToken = jasmine.createSpy('checkToken').and.returnValue(p);
+
+            // Método testado
+            return vm.init()
+                .then(function () {
+                    expect($location.path()).toEqual('/login');
+                });
         });
 
         it(': testando o metodo init() quando não existe o token', function () {

@@ -11,7 +11,9 @@
 
         return {
             authorization: authorization,
+            checkToken: checkToken,
             getTodoList: getTodoList,
+            getHistoryTask: getHistoryTask,
             insertTodoList: insertTodoList,
             updateTodoList: updateTodoList,
             deleteTodoList: deleteTodoList
@@ -34,11 +36,39 @@
                 });
         }
 
+        function checkToken() {
+            var token = $window.localStorage.getItem('token');
+            //$http.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+            
+            return $http.get(URL_BASE + '/checkToken', {headers: {
+                'Authorization': 'Bearer ' + token
+              }})
+                .then(function (response) {
+                    return response;
+                })
+                .catch(function (error) {
+                    return error;
+                });
+        }
+
         function getTodoList() {
             var token = $window.localStorage.getItem('token');
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 
             return $http.get(URL_BASE)
+                .then(function (response) {
+                    return response.data;
+                })
+                .catch(function (error) {
+                    return error;
+                });
+        }
+
+        function getHistoryTask(id) {
+            var token = $window.localStorage.getItem('token');
+            $http.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+            
+            return $http.get(URL_BASE + '/status/' + id)
                 .then(function (response) {
                     return response.data;
                 })

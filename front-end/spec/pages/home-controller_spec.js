@@ -25,6 +25,7 @@ describe('HomeController', function () {
     beforeEach(function () {
         $httpBackend.whenGET('pages/login.tpl.html').respond(200, {});
         $httpBackend.whenGET('pages/home.tpl.html').respond(200, {});
+        $httpBackend.whenGET('pages/history.tpl.html').respond(200, {});
     });
 
     describe('Testando Controller', function () {
@@ -206,7 +207,7 @@ describe('HomeController', function () {
             var params = {
                 "id": 1,
                 "name": "teste",
-                "status": "TODO"
+                "status": ""
             };
 
             var val = {
@@ -363,6 +364,17 @@ describe('HomeController', function () {
                     expect($rootScope.listaMensagens[0].tipo).toEqual('danger');
                     expect($rootScope.listaMensagens[0].text).toContain('Ocorreu um erro!');
                 });
+        });
+
+        it(': testando o metodo historyTask()', function () {
+            // Init
+            var id = 1;
+            var description = 'teste';
+
+            // Método testado
+            vm.historyTask(id, description);
+
+            expect($rootScope.historyDescription).toEqual('teste');
         });
 
     });

@@ -75,6 +75,13 @@ public class TodoListRest {
 	
 	
 	@GET
+	@Path("/checkToken")
+	@SecurityRequirement(name = "api_key")
+	public Response checkToken() {
+		return Response.status(Status.OK).build();
+	}
+	
+	@GET
 	@Operation(summary = "Listar tarefas",
 		description = "Retorna uma lista com todas as tarefas.")
 	@APIResponse(responseCode = "200",

@@ -178,5 +178,58 @@ describe('TodoListService', function () {
             });
         });
 
+        describe(': requisição para checkToken()', function () {
+            var urlReq = 'http://localhost:8080/restapi/todolist/checkToken';
+            var method = 'GET';
+
+            it('deve dar sucesso', function () {
+                // Init
+                $httpBackend.when(method, urlReq)
+                    .respond(200, respSuccess);
+                // Método testado
+                service.checkToken()
+                    .then(function (response) {
+                        expect(response.status).toEqual(200);
+                    });
+                $httpBackend.flush();
+            });
+
+            it('deve dar erro', function () {
+                // Init
+                $httpBackend.when(method, urlReq)
+                    .respond(400, {});
+                // Método testado
+                service.checkToken('', 0);
+                $httpBackend.flush();
+            });
+        });
+
+        describe(': requisição para getHistoryTask()', function () {
+            var id = 1;
+            var urlReq = 'http://localhost:8080/restapi/todolist/status/' + id;
+            var method = 'GET';
+
+            it('deve dar sucesso', function () {
+                // Init
+                $httpBackend.when(method, urlReq)
+                    .respond(200, respSuccess);
+                // Método testado
+                service.getHistoryTask(id)
+                    .then(function (response) {
+                        expect(response.status).toEqual('OK');
+                    });
+                $httpBackend.flush();
+            });
+
+            it('deve dar erro', function () {
+                // Init
+                $httpBackend.when(method, urlReq)
+                    .respond(400, {});
+                // Método testado
+                service.getHistoryTask(id, 0);
+                $httpBackend.flush();
+            });
+        });
+
     });
 });

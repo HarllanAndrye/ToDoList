@@ -17,6 +17,7 @@
         vm.updateTodoList = updateTodoList;
         vm.logout = logout;
         vm.deleteTask = deleteTask;
+        vm.historyTask = historyTask;
 
         $scope.todoDragulaModel = [];
         $scope.doingDragulaModel = [];
@@ -162,6 +163,12 @@
                     }
                 });
             }
+        }
+
+        function historyTask(id, description) {
+            helper.setRootScope('historyDescription', description);
+            helper.path('/history/' + id);
+            //TODO refazer o helper.go e utilizar aqui no lugar do helper.path
         }
     }
 

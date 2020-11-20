@@ -38,7 +38,7 @@ function configKarma(config) {
             'app/**/*-module.js',
             'app/**/*-routes.js',
             'app/**/constantes.js', // pq tá sem tipo
-            'app/**/filtros.js', // pq tá sem tipo
+            //'app/**/filtros.js', // pq tá sem tipo
             'app/**/*-service.js',
             'app/**/*-constant.js',
             'app/**/*-filter.js',
@@ -61,7 +61,7 @@ function configKarma(config) {
             'app/**/*-constant.js': ['coverage'],
             'app/**/*-factory.js': ['coverage'],
             'app/**/constantes.js': ['coverage'],
-            'app/**/filtros.js': ['coverage'],
+            //'app/**/filtros.js': ['coverage'],
             'app/**/*-filter.js': ['coverage'],
             'app/**/*-component.js': ['coverage'],
             'app/**/*-directive.js': ['coverage'],

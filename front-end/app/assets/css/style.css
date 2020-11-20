@@ -366,6 +366,20 @@ li {
 .delete-trash:hover {
   color: red;
 }
+
+.history-icon {
+  float: right;
+  margin-right: 1rem;
+  color: #00c2e0;
+}
+
+.history-icon:hover {
+  color: #00c2e0;
+}
+
+.tooltip-history {
+  background-color: #00c2e0 !important;
+}
 /* ===================== CARD (fim) ===================== */
 
 /* ===================== Tooltip (ini) ===================== */
@@ -515,3 +529,81 @@ button.close {
   border-color: #bee5eb;
 }
 /* ===================== ALERTS (fim) ===================== */
+
+/* ===================== TABLE (ini) ===================== */
+.container-table {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #000;
+  margin-top: 15px;
+}
+
+.responsive-table li {
+  border-radius: 3px;
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.responsive-table .table-header {
+  background-color: #95A5A6;
+  font-size: 14px;
+  font-weight: bold;
+}
+.responsive-table .table-row {
+  background-color: #ffffff;
+  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+}
+
+.responsive-table .col {
+  flex-basis: 25%;
+}
+
+/*.responsive-table .col-1 {
+  flex-basis: 10%;
+}
+.responsive-table .col-2 {
+  flex-basis: 40%;
+}
+.responsive-table .col-3 {
+  flex-basis: 25%;
+}
+.responsive-table .col-4 {
+  flex-basis: 25%;
+}*/
+
+.responsive-table {
+  @media all and (max-width: 767px) {
+    .table-header {
+      display: none;
+    }
+    .table-row{
+      
+    }
+    li {
+      display: block;
+    }
+    .col {
+      
+      flex-basis: 100%;
+      
+    }
+    .col {
+      display: flex;
+      padding: 10px 0;
+      &:before {
+        color: #6C7A89;
+        padding-right: 10px;
+        content: attr(data-label);
+        flex-basis: 50%;
+        text-align: right;
+      }
+    }
+  }
+}
+/* ===================== TABLE (fim) ===================== */
+

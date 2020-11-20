@@ -14,9 +14,16 @@
 
         function init() {
             var token = $window.localStorage.getItem('token');
-            // Se o usuário estiver logado, redireciona para a página Home
             if (token) {
-                helper.path('/home');
+                return TodoListService.checkToken()
+                .then(function (response) {
+                    if (response.status == 200) {
+                        // Se o usuário estiver logado, redireciona para a página Home
+                        helper.path('/home');
+                    } else {
+                        $window.localStorage.setItem('token', '');
+                    }
+                });
             }
         }
 
