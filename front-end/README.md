@@ -28,4 +28,11 @@ Para executar os testes de unidade, use:
 karma start karma.conf.js
 ```
 
+## Acesso
 
+Ao iniciar a aplicação, a página exibida será a de login e os dados de login são:
+
+- E-mail (username): teste@email.com OU user@email.com
+- Password: 123456
+
+Esses dados podem ser alterados no back-end, no arquivo `/resources/import-test.sql`.

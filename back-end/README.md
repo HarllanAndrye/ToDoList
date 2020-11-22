@@ -31,6 +31,17 @@ Agora a aplicação pode ser executada assim: `java -jar target/back-end-1.0.0-S
 Para saber mais sobre como construir aplicações com Quarkus e Maven, você pode acessar: https://quarkus.io/guides/maven-tooling.html
 
 
+## Chave pública e privada
+
+As chaves pública e privada, encontradas na pasta `\META-INF\resources`, foram geradas da seguinte forma (no terminal):
+```shell script
+openssl req -newkey rsa:2048 -new -nodes -keyout privatekey.pem -out csr.pem
+openssl rsa -in privatekey.pem -pubout > publickey.pem
+```
+
+Essas chaves foram utilizadas para a autenticação com JWT, saber mais em: https://quarkus.io/guides/security-jwt
+
+
 ## Documentação da API
 
 Os endpoints iniciam com `http://localhost:8080/restapi/`.
