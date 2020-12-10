@@ -2,10 +2,10 @@
 
 Tecnologias utilizadas:
 
-- AngularJS
-- Grunt
-- Jasmine
-- Karma
+- [AngularJS](https://angularjs.org/)
+- [Grunt](https://gruntjs.com/): utilizado para automatizar tarefas.
+- [Jasmine](https://jasmine.github.io/): test runner - para executar (rodar) os testes.
+- [Karma](https://karma-runner.github.io/latest/index.html): para criar os testes.
 
 Utilizando como base o [Dragula](http://bevacqua.github.io/angularjs-dragula/) (Drag and drop so simple it hurts).
 
